@@ -89,6 +89,25 @@ func (o *CreateTenantParams) BindRequest(r *http.Request, route *middleware.Matc
 			}
 
 			if len(res) == 0 {
+				// Always add annotations
+				if body.Annotations == nil {
+					body.Annotations = make(map[string]string)
+				}
+				_, ok := body.Annotations["vmSize"]
+				if !ok {
+					body.Annotations["vmSize"] = "Standard_L8s_v2"
+				}
+
+				for i := range body.Pools {
+					if body.Pools[i].NodeSelector == nil {
+						body.Pools[i].NodeSelector = make(map[string]string)
+					}
+					_, ok := body.Pools[i].NodeSelector["kubernetes.azure.com/agentpool"]
+					if !ok {
+						body.Pools[i].NodeSelector["kubernetes.azure.com/agentpool"] = *body.Name
+					}
+				}
+
 				o.Body = &body
 			}
 		}

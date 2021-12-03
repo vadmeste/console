@@ -54,6 +54,10 @@ func registerNodesHandlers(api *operations.OperatorAPI) {
 
 // getMaxAllocatableMemory get max allocatable memory given a desired number of nodes
 func getMaxAllocatableMemory(ctx context.Context, clientset v1.CoreV1Interface, numNodes int32) (*models.MaxAllocatableMemResponse, error) {
+	return &models.MaxAllocatableMemResponse{
+		MaxMemory: 8 * 1024 * 1024 * 1024,
+	}, nil
+
 	// can't request less than 4 nodes
 	if numNodes < 4 {
 		return nil, errFewerThanFourNodes

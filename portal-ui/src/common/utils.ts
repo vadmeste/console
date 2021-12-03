@@ -127,68 +127,10 @@ export const setMemoryResource = (
   // value always comes as Gi
   const requestedSizeBytes = getBytes(memorySize.toString(10), "Gi", true);
   const memReqSize = parseInt(requestedSizeBytes, 10);
-  if (maxMemorySize === 0) {
-    return {
-      error: "There is no memory available for the selected number of nodes",
-      request: 0,
-      limit: 0,
-    };
-  }
-
-  if (maxMemorySize < minMemReq) {
-    return {
-      error: "There are not enough memory resources available",
-      request: 0,
-      limit: 0,
-    };
-  }
-
-  if (memReqSize < minMemReq) {
-    return {
-      error: "The requested memory size must be greater than 2Gi",
-      request: 0,
-      limit: 0,
-    };
-  }
-  if (memReqSize > maxMemorySize) {
-    return {
-      error:
-        "The requested memory is greater than the max available memory for the selected number of nodes",
-      request: 0,
-      limit: 0,
-    };
-  }
-
-  const capSize = parseInt(capacitySize, 10);
-  let memLimitSize = memReqSize;
-  // set memory limit based on the capacitySize
-  // if capacity size is lower than 1TiB we use the limit equal to request
-  if (capSize >= parseInt(getBytes("1", "Pi", true), 10)) {
-    memLimitSize = Math.max(
-      memReqSize,
-      parseInt(getBytes("64", "Gi", true), 10)
-    );
-  } else if (capSize >= parseInt(getBytes("100", "Ti"), 10)) {
-    memLimitSize = Math.max(
-      memReqSize,
-      parseInt(getBytes("32", "Gi", true), 10)
-    );
-  } else if (capSize >= parseInt(getBytes("10", "Ti"), 10)) {
-    memLimitSize = Math.max(
-      memReqSize,
-      parseInt(getBytes("16", "Gi", true), 10)
-    );
-  } else if (capSize >= parseInt(getBytes("1", "Ti"), 10)) {
-    memLimitSize = Math.max(
-      memReqSize,
-      parseInt(getBytes("8", "Gi", true), 10)
-    );
-  }
-
   return {
     error: "",
     request: memReqSize,
-    limit: memLimitSize,
+    limit: memReqSize,
   };
 };
 
